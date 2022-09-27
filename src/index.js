@@ -5,8 +5,21 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store';
+import { setAccessToken } from './services/api';
+import { getUser } from './store/actions';
+import decode from "jwt-decode";
+import { SET_CURRENT_USER } from './store/type';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const token = localStorage.getItem("jwtToken");
+if (token) {
+  setAccessToken(token);
+  store.dispatch(getUser());
+  store.dispatch({
+    type: SET_CURRENT_USER,
+    payload: decode(token),
+  });
+}
 root.render(
   <Provider store={store}>
     <App />
